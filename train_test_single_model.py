@@ -23,14 +23,12 @@ def parse_args():
     parser.add_argument('-data_dir', type=str, help='Directory of the full dataset.')
     parser.add_argument('-log_dir', type=str, help='Directory for logging results.')
     parser.add_argument('-seed', type=int, default=21)
-    parser.add_argument('-model_id', type=int, default=1)
     parser.add_argument('-max_num_epochs', type=int, default=200, help='Max number of epochs. Default is 200.')
     parser.add_argument('-model_name', type=str, default='vit', help='Model that you want train. Default is vit.')
     parser.add_argument('-optimizer', type=str, default='adam')
     parser.add_argument('-scheduler', type=str, default='plateau')
     parser.add_argument('-lr', type=float, default=0.000001)
     parser.add_argument('-weight_decay', type=float, default=0.01)
-    parser.add_argument('-dropout', type=float, default=0.5)
     
     return parser.parse_args()
 
@@ -45,7 +43,8 @@ def main():
     label_names = range(num_classes)
     m = args.model_name
     
-    exp_path = args.log_dir + '_' + args.optimizer + '_' + args.scheduler + '_' + str(args.weight_decay) + '_' + str(args.dropout) + '_' + str(args.lr) + '_' + str(args.seed)
+    exp_path = os.path.join(args.log_dir, str(args.seed))
+    
     models_path = os.path.join(exp_path, "models_dir")
     weights_path = os.path.join(exp_path, "model_weights")
     plots_path = os.path.join(exp_path, "plots")
@@ -72,8 +71,7 @@ def main():
     del test_dataset, X_Test, Y_Test
 
 
-    msg0 = m + " id" + str(args.model_id)
-    print(msg0)
+    msg0 = m + " id " + str(args.seed)
 
     X_train, X_val, Y_train, Y_val = train_test_split(X_Train, Y_Train, test_size=0.2, random_state=args.seed, stratify=Y_Train)
     train_dataset = utility.FBD(X_train, Y_train, transform=utility.trainTransform)
@@ -90,10 +88,10 @@ def main():
 
     del train_dataset, val_dataset, X_Train, X_val, Y_Train, Y_val
 
-    model_file = str(args.model_id) + '_' + m + '.pt'
+    model_file = str(args.seed) + '_' + m + '.pt'
     print("Training ", m)
     
-    model = models.load_model(m, args.dropout, num_classes, models_path)
+    model = models.load_model(m, num_classes, models_path)
     model_weight_path = os.path.join(weights_path, model_file)
     start_time = time.time()
     history, best_epoch, train_acc, val_acc, val_loss, time_epoch = models.training(args.max_num_epochs, 
@@ -112,7 +110,7 @@ def main():
 
     visualize.plot_history(history, os.path.join(curves_path, model_file[:-3]))
 
-    with open(exp_path + '/' + str(args.model_id) + '_' + m + '_training_results.txt', 'w') as file:
+    with open(exp_path + '/' + str(args.seed) + '_' + m + '_training_results.txt', 'w') as file:
         file.write(msg0 + "\n" + m + '\n' + msg2 + '\n' + "Train duration (minutes): " + str(int(np.ceil(train_duration / 60))))
     
     ####################### TEST PHASE ##########################
@@ -120,12 +118,12 @@ def main():
     model.load_state_dict(torch.load(os.path.join(weights_path, model_file)))
 
     test_accuracy, preds, targets = models.evaluation_model(model, test)
-    visualize.plot_confusion_matrix(targets, preds, class_labels, plots_path, save = True, name_png = args.model_id + '_' + args.model_name, fr='png', title=str(args.model_id) + '_' + args.model_name)
+    visualize.plot_confusion_matrix(targets, preds, class_labels, plots_path, save = True, name_png = str(args.seed) + '_' + args.model_name, fr='png', title=str(args.seed) + '_' + args.model_name)
     class_report =  classification_report(targets, preds, labels=label_names, output_dict=True)
     print('Test accuracy: ' + str(test_accuracy))
     results = {'accuracy': test_accuracy}
     eval_list = [results, class_report]
-    with open(exp_path + '/' + str(args.model_id) + '_' + m + '_' + 'metrics.json', 'w+') as file:
+    with open(exp_path + '/' + str(args.seed) + '_' + m + '_' + 'metrics.json', 'w+') as file:
         json.dump(eval_list, file, indent=2)
 
     gc.collect()
