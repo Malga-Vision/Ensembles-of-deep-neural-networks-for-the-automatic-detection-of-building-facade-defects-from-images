@@ -9,14 +9,14 @@ import os
 
 
 
-def load_model(model_name, drop, num_classes, folder_path):
+def load_model(model_name, num_classes, folder_path):
     if model_name == "densenet":
         base_model = densenet201(weights=models.DenseNet201_Weights.DEFAULT)
         num_features = base_model.classifier.in_features
         base_model.classifier =  nn.Sequential(
                     nn.Linear(num_features, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, int(num_classes)))
 
     elif model_name == "resnet":
@@ -25,7 +25,7 @@ def load_model(model_name, drop, num_classes, folder_path):
         base_model.fc = nn.Sequential(
                     nn.Linear(num_features, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
 
     elif model_name == "vgg":
@@ -34,7 +34,7 @@ def load_model(model_name, drop, num_classes, folder_path):
         base_model.classifier = nn.Sequential(
                     nn.Linear(num_features, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
 
     elif model_name == "vit":
@@ -42,7 +42,7 @@ def load_model(model_name, drop, num_classes, folder_path):
         base_model.heads = nn.Sequential(
                     nn.Linear(768, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
         
     elif model_name == 'convnext':
@@ -51,7 +51,7 @@ def load_model(model_name, drop, num_classes, folder_path):
                     nn.Flatten(start_dim=1, end_dim=-1),
                     nn.Linear(1024, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
         
     elif model_name == 'swin':
@@ -59,7 +59,7 @@ def load_model(model_name, drop, num_classes, folder_path):
         base_model.head = nn.Sequential(
                     nn.Linear(1024, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
         
     elif model_name == 'swin_t':
@@ -67,7 +67,7 @@ def load_model(model_name, drop, num_classes, folder_path):
         base_model.head = nn.Sequential(
                     nn.Linear(1024, 512),
                     nn.ReLU(),
-                    nn.Dropout(drop),
+                    nn.Dropout(0.5),
                     nn.Linear(512, num_classes))
     
     path = model_name + ".pt"
@@ -136,6 +136,7 @@ class EarlyStopping:
 
 def training(epochs, model, train_loader, val_loader, model_file, lr, opt = 'adam', sched = 'exp', wd = 0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("Device: ", device)
     model = model.to(device)
     criterion = nn.CrossEntropyLoss()
     
@@ -295,7 +296,6 @@ class Ensemble(nn.Module):
 
         outputs = [model(x) for model in self.models]
         outputs = torch.stack(outputs, dim=1)  # Shape: (batch_size, num_models, num_classes)
-        
         return outputs
 
 
