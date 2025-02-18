@@ -44,3 +44,19 @@ The average ensemble method requires no training. To test the average ensemble w
 
 ### Learnable ensemble
 The **train_test_learnable_ensemble.py** script trains a learnable ensemble on the training set using specific models, then performs inference on the test set. Use the same parameters as **extract_logits.py**.
+
+## Citation
+Please cite the following paper if you are going to use this code or the FBD dataset:
+```
+@ARTICLE{10747365,
+  author={Interlando, Matteo and Pacifico, Maria Giovanna and Novellino, Antonio and Pastore, Vito Paolo},
+  journal={IEEE Access}, 
+  title={Ensembles of Deep Neural Networks for the Automatic Detection of Building Facade Defects From Images}, 
+  year={2024},
+  volume={12},
+  number={},
+  pages={164953-164965},
+  keywords={Buildings;Accuracy;Feature extraction;Training;Peer-to-peer computing;Inspection;Benchmark testing;Visualization;Transformers;Maintenance engineering;Monitoring;Defect detection;Classification algorithms;Artificial neural networks;Deep learning;Building monitoring;building facade defects classification;ensemble of deep neural networks;vision transformers;deep learning},
+  doi={10.1109/ACCESS.2024.3494550}}
+}
+```
