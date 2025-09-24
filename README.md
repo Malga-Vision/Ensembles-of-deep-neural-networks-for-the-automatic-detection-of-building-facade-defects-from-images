@@ -38,7 +38,6 @@ Before applying ensemble strategies, extract logits for the models included in t
 -model_in_ensemble # List of models to include in the ensemble
 ```
 
-
 ### Average ensemble
 The average ensemble method requires no training. To test the average ensemble with specific models on the validation set (using a specified seed), use **val_average_ensemble.py**. To test on the test set, use **test_average_ensemble.py**. Both scripts accept the same parameters as **extract_logits.py**.
 
