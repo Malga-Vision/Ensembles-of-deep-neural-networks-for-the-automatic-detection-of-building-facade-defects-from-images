@@ -25,7 +25,7 @@ def parse_args():
     parser.add_argument('-lr', type=float, default=0.0001)
     parser.add_argument('-weight_decay', type=float, default=0.01)
     parser.add_argument('-model_in_ensemble', nargs='*', type=str, default=['vit', 'swin'],
-                        help='List of models to include in the ensemble. Default is [\'vit\', \'swin\']. Use in the following way: --myarg \'vit\' \'swin\' \'convnext\'')
+                        help='List of models to include in the ensemble. Default is [\'vit\', \'swin\'].')
     
     return parser.parse_args()
 
@@ -33,7 +33,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    #exp_path = os.path.join(args.log_dir, args.optimizer + '_' + args.scheduler + '_' + str(args.weight_decay) + '_' + str(args.lr),  str(args.seed))
+    
     exp_path = os.path.join(args.log_dir, str(args.seed))
     model_path = os.path.join(exp_path, "models_dir")
     weights_dir = os.path.join(exp_path, "model_weights")

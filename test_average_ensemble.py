@@ -15,13 +15,8 @@ def parse_args():
     parser.add_argument('-data_dir', type=str, help='Directory of the full dataset.')
     parser.add_argument('-log_dir', type=str, help='Directory for logging results.')
     parser.add_argument('-seed', type=int, default=21)
-    parser.add_argument('-max_num_epochs', type=int, default=200, help='Max number of epochs. Default is 200.')
-    parser.add_argument('-optimizer', type=str, default='adam')
-    parser.add_argument('-scheduler', type=str, default='plateau')
-    parser.add_argument('-lr', type=float, default=0.000001)
-    parser.add_argument('-weight_decay', type=float, default=0.01)
     parser.add_argument('-model_in_ensemble', nargs='*', type=str, default=['vit', 'swin'],
-                        help='List of models to include in the ensemble. Default is [\'vit\', \'swin\']. Use in the following way: --myarg \'vit\' \'swin\' \'convnext\'')
+                        help='List of models to include in the ensemble. Default is [\'vit\', \'swin\'].')
     
     return parser.parse_args()
 

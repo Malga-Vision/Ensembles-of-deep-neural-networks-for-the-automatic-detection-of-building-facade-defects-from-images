@@ -12,12 +12,10 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('-data_dir', type=str, help='Directory of the full dataset.')
     parser.add_argument('-log_dir', type=str, help='Directory for logging results.')
-    parser.add_argument('-max_num_epochs', type=int, default=200, help='Max number of epochs. Default is 200.')
-    parser.add_argument('-model_name', type=str, default='vit', help='Model that you want train. Default is vit.')
-    parser.add_argument('-optimizer', type=str, default='adam')
-    parser.add_argument('-scheduler', type=str, default='plateau')
-    parser.add_argument('-lr', type=float, default=0.000001)
-    parser.add_argument('-weight_decay', type=float, default=0.1)
+    parser.add_argument('-seed', type=int, default=21)
+    parser.add_argument('-model_in_ensemble', nargs='*', type=str, default=['vit', 'swin'],
+                        help='List of models to include in the ensemble. Default is [\'vit\', \'swin\'].')
+
     
     return parser.parse_args()
 
@@ -26,7 +24,7 @@ def parse_args():
 def main():
     args = parse_args()
 
-    exp_path = os.path.join(args.log_dir, args.optimizer + '_' + args.scheduler + '_' + str(args.weight_decay) + '_' + str(args.lr),  str(args.seed))    
+    exp_path = os.path.join(args.log_dir, str(args.seed))    
     model_path = os.path.join(exp_path, "models_dir")
     weights_dir = os.path.join(exp_path, "model_weights")
     logits_dir = os.path.join(exp_path, 'logits_dir')
