@@ -22,20 +22,23 @@ To begin, open a terminal and navigate to the main project folder.
 #### Train individual models
 To train and test individual models, use the script **train_test_single_model.py**. This script accepts the following parameters:  
 ```
- -data_dir # Path to the full dataset directory
- -log_dir # Directory for logging results
- -seed # Seed for splitting the training set into train and validation sets
- -max_num_epochs # Maximum training epochs (default: 200)
- -model_name # Model to train; options are: 'vit', 'swin', 'swin_t', 'convnext', 'resnet', 'densenet', 'vgg'
- -optimizer # Optimizer name (default: 'adam')
- -scheduler # Training scheduler (default: 'plateau')
- -lr # Initial learning rate (default: 0.000001)
- -weight_decay # Weight decay value (default: 0.001)
+ -data_dir: Path to the full dataset directory
+ -log_dir: Directory for logging results. In this directory, some folders will be created for plots, and model weights
+ -seed: Seed for splitting the training set into train and validation sets
+ -max_num_epochs: Maximum training epochs (default: 200). The number should be higher than 4
+ -model_name: Model to train; options are: 'vit', 'swin', 'swin_t', 'convnext', 'resnet', 'densenet', 'vgg'
+ -optimizer: Optimizer name (default: 'adam')
+ -scheduler: Training scheduler (default: 'plateau')
+ -lr: Initial learning rate (default: 0.000001)
+ -weight_decay: Weight decay value (default: 0.001)
 ```
+The **log_dir** folder will contain subfolders for plots, results, and model weights.
+For the following scripts, use the same **log_dir** path and **seed** value.
+
 ### Extract logits
 Before applying ensemble strategies, extract logits for the models included in the ensemble. Run the **extract_logits.py** script, which takes the same parameters as **train_test_single_model.py** plus the following:
 ```
--model_in_ensemble # List of models to include in the ensemble
+-model_in_ensemble: List of models to include in the ensemble
 ```
 
 ### Average ensemble
