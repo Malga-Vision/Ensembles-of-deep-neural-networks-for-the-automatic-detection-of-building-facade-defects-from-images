@@ -23,9 +23,9 @@ To begin, open a terminal and navigate to the main project folder.
 To train and test individual models, use the script **train_test_single_model.py**. This script accepts the following parameters:  
 ```
  -data_dir: Path to the full dataset directory
- -log_dir: Directory for logging results. In this directory, some folders will be created for plots, and model weights
+ -log_dir: Directory for logging results. Directory for logging results. Subfolders for plots, results, and model weights will be created here
  -seed: Seed for splitting the training set into train and validation sets
- -max_num_epochs: Maximum training epochs (default: 200). The number should be higher than 4
+ -max_num_epochs: Maximum training epochs (default: 200; must be greater than 4)
  -model_name: Model to train; options are: 'vit', 'swin', 'swin_t', 'convnext', 'resnet', 'densenet', 'vgg'
  -optimizer: Optimizer name (default: 'adam')
  -scheduler: Training scheduler (default: 'plateau')
@@ -33,19 +33,33 @@ To train and test individual models, use the script **train_test_single_model.py
  -weight_decay: Weight decay value (default: 0.001)
 ```
 The **log_dir** folder will contain subfolders for plots, results, and model weights.
-For the following scripts, use the same **log_dir** path and **seed** value.
+For subsequent scripts, use the same **log_dir** path and **seed** value to ensure consistency.
 
 ### Extract logits
-Before applying ensemble strategies, extract logits for the models included in the ensemble. Run the **extract_logits.py** script, which takes the same parameters as **train_test_single_model.py** plus the following:
+Before applying ensemble strategies, extract logits for the models included in the ensemble. Run the **extract_logits.py** script, which takes the following input parameters:
 ```
--model_in_ensemble: List of models to include in the ensemble
+-data_dir: Path to the full dataset directory
+-log_dir: The same path used in train_test_single_model.py. In each seed folder will be created a logits_dir folder to store the extracted logits for each ensemble configuration
+-seed: same seed used for training individual models
+-model_in_ensemble: List of models to include in the ensemble. Default is ['vit', 'swin']
 ```
 
 ### Average ensemble
 The average ensemble method requires no training. To test the average ensemble with specific models on the validation set (using a specified seed), use **val_average_ensemble.py**. To test on the test set, use **test_average_ensemble.py**. Both scripts accept the same parameters as **extract_logits.py**.
 
 ### Learnable ensemble
-The **train_test_learnable_ensemble.py** script trains a learnable ensemble on the training set using specific models, then performs inference on the test set. Use the same parameters as **extract_logits.py**.
+The **train_test_learnable_ensemble.py** script trains a learnable ensemble on the training set using specific models, then performs inference on the test set. It accepts the following parameters:
+```
+ -data_dir: Path to the full dataset directory
+ -log_dir: Directory for logging results. The same of train_test_single_model.py script
+ -seed: The same used for training individual models 
+ -max_num_epochs: Maximum training epochs (default: 200). The number should be higher than 4
+ -model_in_ensemble: List of models to include in the ensemble. Default is ['vit', 'swin'] 
+ -optimizer: Optimizer name (default: 'adam')
+ -scheduler: Training scheduler (default: 'plateau')
+ -lr: Initial learning rate (default: 0.0001)
+ -weight_decay: Weight decay value (default: 0.01)
+```
 
 ## Citation
 Please cite the following paper if you are going to use this code or the FBD dataset:
